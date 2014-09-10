@@ -44,7 +44,7 @@ var fingers2 = [
 var fingersAssigned = false; //flag to determine if all fingers have been detected and assigned an ID
 
 
-VIEW_ANGLE = 15;
+VIEW_ANGLE = 10;
 ASPECT = WIDTH / HEIGHT;
 NEAR = 1;
 FAR = 10000;
@@ -77,12 +77,12 @@ camera1 = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 camera2 = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 
 camera1.rotation.order = 'YZX';
-camera1.position.set(30, 10, 1);
+camera1.position.set(60, 10, 1);
 camera1.lookAt(scene1.position);
 scene1.add(camera1);
 
 camera2.rotation.order = 'YZX';
-camera2.position.set(30, 10, -1);
+camera2.position.set(60, 10, -1);
 camera2.lookAt(scene2.position);
 scene2.add(camera2);
 
@@ -389,55 +389,69 @@ function leapToScene(frame, leapPos){
   //Why does z require the negative value here?
 }
 
-//render method is called by the animate function to render each frame, 
-//with requestAnimationFrame
+// //render method is called by the animate function to render each frame, 
+// //with requestAnimationFrame
+// function render() {
+
+
+
+//   renderer1.render(scene1, camera1);
+//   renderer2.render(scene2, camera2);
+
+//   requestAnimationFrame(render);
+// }
+
+
+// Add DeviceOrientation Controls
+controls1 = new DeviceOrientationController( camera1, renderer1.domElement );
+controls1.connect();
+
+setupControllerEventHandlers( controls1 );
+
+
+controls2 = new DeviceOrientationController( camera2, renderer2.domElement );
+controls2.connect();
+
+setupControllerEventHandlers( controls2 );
+
+
+// Demonstration of some DeviceOrientationController event handling
+function setupControllerEventHandlers( controls ) {
+
+  // Listen for manual rotate interaction
+
+  controls.addEventListener( 'rotatestart', function () {
+    controllerEl.innerText = 'Manual Rotate';
+  });
+
+  controls.addEventListener( 'rotateend', function () {
+    controllerEl.innerText = controllerDefaultText;
+  });
+}
+
+// Render loop
 function render() {
-
-  var deg2rad = Math.PI / 180;
-  $(".camRot").html("ROT: x:" +camera1.rotation.x+", y:" +camera1.rotation.y+", z:" +camera1.rotation.z);
-
-  var rotx, roty, rotz;
-  roty = (acc.y) * deg2rad+1.5;
-  rotz = (acc.z) * deg2rad + 4;
-  rotx = (acc.x) * deg2rad;
-
-  $(".camPos").html("POS: x:" +rotx+", y:" +roty+", z:" +rotz);
-
-  camera1.rotation.y = roty;
-  camera1.rotation.z = rotz;
-  camera1.rotation.x = rotx;
-  
-  camera2.rotation.y = roty;
-  camera2.rotation.z = rotz;
-  camera2.rotation.x = rotx;
-
-  renderer1.render(scene1, camera1);
-  renderer2.render(scene2, camera2);
-
-  requestAnimationFrame(render);
+  controls1.update();
+  controls2.update();
+  renderer1.render( scene1, camera1 );
+  renderer2.render( scene2, camera2 );
+  requestAnimationFrame(render );
 }
 
- //read event data from device
-function getDeviceRotation(evt){
-  //exponential smoothing algorithm
-  // alpha = event.alpha + s*(alpha - event.alpha),  with 0 <= s <= 1;
- 
-    // gamma is the left-to-right tilt in degrees, where right is positive
-    // beta is the front-to-back tilt in degrees, where front is positive
-    // alpha is the compass direction the device is facing in degrees
-    acc.y = evt.beta;
-    acc.z = evt.gamma ;
-    acc.x = evt.alpha;
+render()
 
-    $(".accelerometer").html("x:" +acc.x+", y:" +acc.y+", z:" +acc.z);
-}
+
 
 
 // define connection settings
 var leap = new Leap.Controller({
-  host: '127.0.0.1',
+  host: '0.0.0.0',
   port: 6437
 });
 
 // connect controller
 leap.connect();
+
+function getDeviceRotation(e){
+  $(".accelerometer").html(e.alpha+", "+e.beta+", "+e.gamma)
+}

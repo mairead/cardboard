@@ -35,3 +35,7 @@ a {
   border: 1px solid blue;
 }
 */
+
+.accelerometer-data, .quaternion{
+  font-size: 1.5em;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Kalman filtered accelerometer data</title>
+
+		<!-- CSS -->
+  	<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" media="screen" >
+
+	</head>
+
+	<body>
+		<table>
+			<tr>
+				<td>ACCELEROMETER</td>
+				<td><span class="accelerometer"></span></td>
+			</tr>
+			<tr>
+				<td>KALMAN</td>
+				<td><span class="kalman-result"></span></td>
+			</tr>
+			<tr>
+				<td>DELTA</td>
+				<td><span class="difference"></span></td>
+			</tr>
+		</table>
+		<script src="javascripts/three.min.js"></script>
+		<script src="javascripts/jquery.js"></script>
+		<script src="//js.leapmotion.com/leap-0.6.2.js"></script>
+		<script src="javascripts/sylvester.src.js"></script>
+		<script src="javascripts/kalman.js"></script>
+		<script src="javascripts/kalman-filter.js"></script>
+		
+	</body>			
+</html>
