@@ -46,20 +46,15 @@ var R_k = $M([
             ]); //2x Scalar matrix. Describes noise from sensor. Set to 2 to begin
 var KO = new KalmanObservation(z_k,H_k,R_k);
 
-//each 1/2th second take new reading from accelerometer to update
+//each 1/10th second take new reading from accelerometer to update
 var getNewPos = window.setInterval(function(){
-
-  // if(count < 20){
 
     KO.z_k = $V([acc.x, acc.y, acc.z]); //vector to be new reading from x, y, z
     KM.update(KO);
 
-    //$(".accelerometer").html("x:" +acc.x+", y:" +acc.y+", z:" +acc.z);
-    console.log(KM.x_k.elements[0], KM.x_k.elements[1], KM.x_k.elements[2]);
     $(".kalman-result").html(" x:" +KM.x_k.elements[0]+", y:" +KM.x_k.elements[1]+", z:" +KM.x_k.elements[2]);
     $(".difference").html(" x:" +(acc.x-KM.x_k.elements[0])+", y:" +(acc.y-KM.x_k.elements[1])+", z:" +(acc.z-KM.x_k.elements[2]))
-    // count++;
-  //}
+
 }, 100);
 
  //read event data from device
@@ -71,5 +66,6 @@ function getDeviceRotation(evt){
     acc.x = evt.alpha;
     acc.y = evt.beta;
     acc.z = evt.gamma; 
+    
     $(".accelerometer").html(" x:" +acc.x+", y:" +acc.y+", z:" +acc.z);
 }
